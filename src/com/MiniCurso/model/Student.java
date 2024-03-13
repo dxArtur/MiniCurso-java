@@ -1,16 +1,16 @@
 package com.MiniCurso.model;
 
 public class Student {
-	private Number id;
+	private String matricula;
 	private String name;
 	private String email;
 	private String cpf;
 	//add courses list for students
-	public Number getId() {
-		return id;
+	public String getMatricula() {
+		return matricula;
 	}
-	public void setId(Number id) {
-		this.id = id;
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
 	}
 	public String getName() {
 		return name;
@@ -30,11 +30,5 @@ public class Student {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	private String password;
+	
 }

@@ -1,11 +1,13 @@
 package com.MiniCurso.dao;
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.MiniCurso.util.ConnectionFactory;
 import com.MiniCurso.model.Teachers;
+import com.MiniCurso.model.Courses;
 
 public class TeacherDAO {
 	private Connection connection;
@@ -62,4 +64,7 @@ public class TeacherDAO {
 		return teacher;
 	}
 	
+	public void teachCourse(Teachers teacher, Course course) {
+		
+	}
 }

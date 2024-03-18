@@ -5,53 +5,50 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.MiniCurso.util.ConnectionFactory;
+import com.MiniCurso.model.Teachers;
 
-
-import com.MiniCurso.model.Student;
-
-public class StudentDAO {
+public class TeacherDAO {
 	private Connection connection;
-	Student student = null;
+	Teachers teacher = null;
 	
-	public StudentDAO() {
+	public TeacherDAO() {
 		this.connection = new ConnectionFactory().getConnection();
 	}
 	
-	public void addStudent(Student student) {
+	public void addTeacher(Teachers teacher) {
 		String sql = "INSERT INTO students (matricula, name, email, cpf) VALUES (?, ?, ?, ?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			stmt.setLong(1, student.getMatricula());
-			stmt.setString(2, student.getName());
-			stmt.setString(3, student.getEmail());
-			stmt.setString(4, student.getCpf());
+			stmt.setLong(1, teacher.getMatricula());
+			stmt.setString(2, teacher.getName());
+			stmt.setString(3, teacher.getEmail());
+			stmt.setString(4, teacher.getCpf());
 			
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 	}
 	
-	public Student getStudent(String matricula) {
-		student = null;
+	public Teachers getTeacher(Long matricula) {
+		teacher = null;
 		String sql = "select * from students where matricula = ?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			stmt.setString(1, matricula);
+			stmt.setLong(1, matricula);
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					student = new Student();
-					student.setCpf(rs.getString("cpf"));
-					student.setMatricula(rs.getLong("matricula"));
-					student.setName(rs.getString("name"));
-					student.setEmail(rs.getString("email"));
+					teacher = new Teachers();
+					teacher.setCpf(rs.getString("cpf"));
+					teacher.setMatricula(rs.getLong("matricula"));
+					teacher.setName(rs.getString("name"));
+					teacher.setEmail(rs.getString("email"));
 
 				}
 			}
-			
 			try {
-				if (student == null) {
+				if (teacher == null) {
 					throw new NullPointerException("Estudante com matricula " + matricula + " não encontrado");
 				}
 			}catch (NullPointerException e){
@@ -62,11 +59,7 @@ public class StudentDAO {
 			throw new RuntimeException(e);
 		}
 		
-		return student;
-	}
-	
-	public void enrollCourse() {
-		
+		return teacher;
 	}
 	
 }

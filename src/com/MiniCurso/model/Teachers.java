@@ -1,15 +1,11 @@
 package com.MiniCurso.model;
-import java.util.List;
 
-public class Student {
-	
+public class Teachers {
 	private Long matricula;
 	private String name;
 	private String email;
 	private String cpf;
-	private List<Courses> courses;
-	
-	
+	//add courses list for students
 	public Long getMatricula() {
 		return matricula;
 	}
@@ -34,12 +30,4 @@ public class Student {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
-	public List<Courses> getCourses() {
-		return courses;
-	}
-	public void setCourses(List<Courses> courses) {
-		this.courses = courses;
-	}
-	
 }

@@ -1,15 +1,15 @@
 package com.MiniCurso.model;
 
 public class Courses {
-	private Number id;
+	private Long id;
 	private String name;
-	private String nameTeacher;
-	private Number courseHours;
+	private Long teacher;
+	private Integer courseHours;
 	//add students list for course
-	public Number getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Number id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -18,16 +18,16 @@ public class Courses {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getNameTeacher() {
-		return nameTeacher;
+	public Long getTeacher() {
+		return teacher;
 	}
-	public void setNameTeacher(String nameTeacher) {
-		this.nameTeacher = nameTeacher;
+	public void setTeacher(Long teacher) {
+		this.teacher = teacher;
 	}
-	public Number getCourseHours() {
+	public Integer getCourseHours() {
 		return courseHours;
 	}
-	public void setCourseHours(Number courseHours) {
+	public void setCourseHours(Integer courseHours) {
 		this.courseHours = courseHours;
 	}
 }

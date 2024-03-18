@@ -5,8 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.MiniCurso.util.ConnectionFactory;
-
-
+import com.MiniCurso.model.Courses;
 import com.MiniCurso.model.Student;
 
 public class StudentDAO {
@@ -65,8 +64,18 @@ public class StudentDAO {
 		return student;
 	}
 	
-	public void enrollCourse() {
-		
+	public void enrollStudentInCourse(Student student, Courses course) {
+		String sql = "INSERT INTO students_courses (student_id, course_id) VALUES (?, ?)";
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setLong(1, student.getMatricula());
+			stmt.setLong(2, course.getId());
+			stmt.executeUpdate();
+			
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

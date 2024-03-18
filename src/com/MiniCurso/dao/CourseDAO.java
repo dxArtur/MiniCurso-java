@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.MiniCurso.util.ConnectionFactory;
 import com.MiniCurso.model.Courses;
+import com.MiniCurso.model.Teachers;
 
 public class CourseDAO {
 	private Connection connection;
@@ -61,4 +62,33 @@ public class CourseDAO {
 		return course;
 	}
 	
+	public Teachers getTeacherOfCourse(Courses course) {
+		Teachers teacher = null;
+		String sql = "SELECT teacher_id FROM teachers_courses WHERE course_id = ?\"";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setLong(1, course.getId());
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				teacher = new Teachers();
+				teacher.setMatricula(rs.getLong("matricula"));
+			
+		}
+		try {
+			if (teacher == null) {
+				throw new NullPointerException("O curso "+ course.getName() +" ainda não tem professor registrado");
+			}
+		}catch (NullPointerException e){
+			e.printStackTrace();
+		}
+		
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return teacher;
+	}
 }
+		
+

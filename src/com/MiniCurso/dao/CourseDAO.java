@@ -17,14 +17,20 @@ public class CourseDAO {
 	}
 	
 	public void addCourse(Courses course) {
-		String sql = "INSERT INTO students (matricula, name, email, cpf) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO courses (id, name, course_hours) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			stmt.setLong(1, course.getId());
 			stmt.setString(2, course.getName());
-			stmt.setLong(3, course.getTeacher());
-			stmt.setInt(4, course.getCourseHours());
+			stmt.setInt(3, course.getCourseHours());
+			
+			int rowsInserted = stmt.executeUpdate(); 
+	        if (rowsInserted > 0) {
+	            System.out.println("Curso adicionado com sucesso.");
+	        } else {
+	            System.out.println("Falha ao adicionar curso.");
+	        }
 			
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
@@ -33,7 +39,7 @@ public class CourseDAO {
 	
 	public Courses getCourse(Long id) {
 		course = null;
-		String sql = "select * from students where matricula = ?";
+		String sql = "select * from courses where id = ?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
@@ -42,8 +48,7 @@ public class CourseDAO {
 				if (rs.next()) {
 					course = new Courses();
 					course.setName(rs.getString("name"));
-					course.setTeacher(rs.getLong("teacher"));
-					course.setCourseHours(rs.getInt("courseHours"));
+					course.setCourseHours(rs.getInt("course_hours"));
 
 				}
 			}
@@ -62,9 +67,41 @@ public class CourseDAO {
 		return course;
 	}
 	
-	public Teachers getTeacherOfCourse(Courses course) {
+	public void updateCourse(Courses course) {
+	    String sql = "UPDATE courses SET name = ?, course_hours = ? WHERE id = ?";
+	    try {
+	        PreparedStatement stmt = connection.prepareStatement(sql);
+	        stmt.setString(1, course.getName());
+	        stmt.setInt(2, course.getCourseHours());
+	        stmt.setLong(3, course.getId());
+	        
+	        int rowsUpdated = stmt.executeUpdate();
+	        if (rowsUpdated > 0) {
+	            System.out.println("Curso atualizado com sucesso.");
+	        } else {
+	            System.out.println("Falha ao atualizar curso. Nenhum curso foi modificado.");
+	        }
+	        
+	    } catch (SQLException e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
+	public void deleteCourse(Long id) {
+        String sql = "DELETE FROM courses WHERE id = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+	
+	public Long getTeacherOfCourse(Courses course) {
 		Teachers teacher = null;
-		String sql = "SELECT teacher_id FROM teachers_courses WHERE course_id = ?\"";
+		String sql = "SELECT teacher_matricula FROM teacher_courses WHERE course_id = ?";
 		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -72,23 +109,23 @@ public class CourseDAO {
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
 				teacher = new Teachers();
-				teacher.setMatricula(rs.getLong("matricula"));
+				teacher.setMatricula(rs.getLong("teacher_matricula"));
 			
-		}
-		try {
-			if (teacher == null) {
-				throw new NullPointerException("O curso "+ course.getName() +" ainda não tem professor registrado");
 			}
-		}catch (NullPointerException e){
-			e.printStackTrace();
-		}
+			try {
+				if (teacher == null) {
+					throw new NullPointerException("O curso "+ course.getName() +" ainda não tem professor registrado");
+				}
+			}catch (NullPointerException e){
+					e.printStackTrace();
+				}
 		
 		}catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 		
-		return teacher;
-	}
+		return teacher.getMatricula();
+		}
 }
 		
 

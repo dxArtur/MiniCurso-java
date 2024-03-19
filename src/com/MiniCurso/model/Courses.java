@@ -3,7 +3,6 @@ package com.MiniCurso.model;
 public class Courses {
 	private Long id;
 	private String name;
-	private Long teacher;
 	private Integer courseHours;
 	//add students list for course
 	public Long getId() {
@@ -17,12 +16,6 @@ public class Courses {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public Long getTeacher() {
-		return teacher;
-	}
-	public void setTeacher(Long teacher) {
-		this.teacher = teacher;
 	}
 	public Integer getCourseHours() {
 		return courseHours;

@@ -26,18 +26,25 @@ public class StudentDAO {
 			stmt.setString(3, student.getEmail());
 			stmt.setString(4, student.getCpf());
 			
+			int rowsInserted = stmt.executeUpdate(); 
+	        if (rowsInserted > 0) {
+	            System.out.println("Aluno adicionado com sucesso.");
+	        } else {
+	            System.out.println("Falha ao adicionar aluno.");
+	        }
+			
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 	}
 	
-	public Student getStudent(String matricula) {
+	public Student getStudent(Long matricula) {
 		student = null;
 		String sql = "select * from students where matricula = ?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			stmt.setString(1, matricula);
+			stmt.setLong(1, matricula);
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
 					student = new Student();
@@ -64,18 +71,88 @@ public class StudentDAO {
 		return student;
 	}
 	
+	
+	public void updateStudent(Student student) {
+	    String sql = "UPDATE students SET name = ?, email = ?, cpf = ? WHERE matricula = ?";
+	    try {
+	        PreparedStatement stmt = connection.prepareStatement(sql);
+	        
+	        stmt.setString(1, student.getName());
+	        stmt.setString(2, student.getEmail());
+	        stmt.setString(3, student.getCpf());
+	        stmt.setLong(4, student.getMatricula());
+	        
+	        int rowsUpdated = stmt.executeUpdate(); 
+	        if (rowsUpdated > 0) {
+	            System.out.println("Aluno atualizado com sucesso.");
+	        } else {
+	            System.out.println("Falha ao atualizar aluno.");
+	        }
+	        
+	    } catch (SQLException e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
+	public void deleteStudent(Long matricula) {
+        String sql = "DELETE FROM students WHERE matricula = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, matricula);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
 	public void enrollStudentInCourse(Student student, Courses course) {
-		String sql = "INSERT INTO students_courses (student_id, course_id) VALUES (?, ?)";
+		String sql = "INSERT INTO student_courses (student_matricula, course_id) VALUES (?, ?)";
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setLong(1, student.getMatricula());
 			stmt.setLong(2, course.getId());
-			stmt.executeUpdate();
+			
+			int rowsInserted = stmt.executeUpdate();
+			if (rowsInserted > 0) {
+	            System.out.println("Aluno matriculado ao curso com sucesso.");
+	        } else {
+	            System.out.println("Falha ao matricular aluno ao curso.");
+	        }
 			
 		}catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	
+
+	
+	public Long getCourseOfStudent(Student student) {
+		Courses course = null;
+		String sql = "SELECT course_id FROM student_courses WHERE student_matricula = ? ";
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setLong(1, student.getMatricula());
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				course = new Courses();
+				course.setId(rs.getLong("course_id"));
+			
+			}
+			try {
+				if (course == null) {
+					throw new NullPointerException("O aluno: '" + student.getName() + "', ainda não se matriculou em nenhum ");
+				}
+			}catch (NullPointerException e){
+					e.printStackTrace();
+				}
+			
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return course.getId();
 	}
 	
 }

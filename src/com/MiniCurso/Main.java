@@ -32,7 +32,7 @@ public class Main {
         
         Teachers newTeacher = new Teachers();
         newTeacher.setMatricula(Long.valueOf(1));
-        newTeacher.setCpf("12345.6789-00");
+        newTeacher.setCpf("123.456.789-00");
         newTeacher.setName("John Doe");
         newTeacher.setEmail("johndoe@teacher.com");
         
@@ -47,7 +47,7 @@ public class Main {
              System.out.println("Email: " + searchedTeacher.getEmail());
              System.out.println("Cpf: " + searchedTeacher.getCpf());
         }else {
-            System.out.println("professor não encontrado.");
+            System.out.println("Professor não encontrado.");
         }
         
         
@@ -56,14 +56,49 @@ public class Main {
         
         
         //get teacher of course
-        Teachers teacherOfCourse = courseDAO.getTeacherOfCourse(newCourse);
+        Long teacherOfCourse = courseDAO.getTeacherOfCourse(newCourse);
         
         if (teacherOfCourse != null) {
-        	System.out.println("nome"+ teacherOfCourse.getName());
-        	System.out.println("email"+ teacherOfCourse.getEmail());
-        	System.out.println("cpf"+ teacherOfCourse.getCpf());
+        	teacherDAO.getTeacher(teacherOfCourse);        	
         } else {
-        	System.out.println("Professor não encontrado.");
+        	System.out.println("O curso: '"+ newCourse.getName() +"', ainda não possui professor cadastrado");
+        }
+        
+        
+      //add student
+        StudentDAO studentDAO = new StudentDAO();
+        
+        Student newStudent = new Student();
+        newStudent.setMatricula(Long.valueOf(1));
+        newStudent.setCpf("987.654.321-00");
+        newStudent.setName("Jane Smith");
+        newStudent.setEmail("janesmith@student.com");
+        
+        studentDAO.addStudent(newStudent);
+        
+        //get student
+        Student searchedStudent = studentDAO.getStudent(Long.valueOf(1));
+        
+        if (searchedStudent != null) {
+        	 System.out.println("Aluno encontrado:");
+             System.out.println("Nome: " + searchedStudent.getName());
+             System.out.println("Email: " + searchedStudent.getEmail());
+             System.out.println("Cpf: " + searchedStudent.getCpf());
+        }else {
+            System.out.println("Aluno não encontrado.");
+        }
+        
+        //enroll student in course
+        studentDAO.enrollStudentInCourse(newStudent, newCourse);
+        
+        
+        // get course of student
+        Long courseOfStudent = studentDAO.getCourseOfStudent(newStudent);
+        
+        if (courseOfStudent != null) {
+        	studentDAO.getStudent(courseOfStudent);
+        } else {
+        	System.out.println("Aluno: '"+ newStudent.getName() +"', ainda não foi matriculado em nenhum curso.");
         }
         
         

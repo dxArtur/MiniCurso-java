@@ -163,8 +163,8 @@ public class Main {
         
         if (updatedDataCourses != null) {
         	System.out.println("Curso atualizado: ");
-        	System.out.println("Nome: " + updatedDataStudent.getName());
-            System.out.println("Carga horaria: " + updatedDataStudent.getEmail());
+        	System.out.println("Nome: " + updatedDataCourse.getName());
+            System.out.println("Carga horaria: " + updatedDataCourse.getCourseHours());
         }else {
         	System.out.println("Falha ao atualizar curso.");
         }

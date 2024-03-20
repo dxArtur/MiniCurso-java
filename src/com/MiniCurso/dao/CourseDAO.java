@@ -54,7 +54,7 @@ public class CourseDAO {
 			}
 			try {
 				if (course == null) {
-					throw new NullPointerException("Curso com id " + id + " não encontrado");
+					System.out.println("Curso com id " + id + " não encontrado");
 				}
 			}catch (NullPointerException e){
 				e.printStackTrace();
@@ -92,7 +92,12 @@ public class CourseDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setLong(1, id);
-            stmt.executeUpdate();
+            int rowsDeleted = stmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Curso deletado com sucesso.");
+            } else {
+                System.out.println("Falha ao deletar curso. Nenhum curso foi deletado.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -114,7 +119,7 @@ public class CourseDAO {
 			}
 			try {
 				if (teacher == null) {
-					throw new NullPointerException("O curso "+ course.getName() +" ainda não tem professor registrado");
+					System.out.println("O curso "+ course.getName() +" ainda não tem professor registrado");
 				}
 			}catch (NullPointerException e){
 					e.printStackTrace();

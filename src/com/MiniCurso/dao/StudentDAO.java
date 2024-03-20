@@ -58,7 +58,7 @@ public class StudentDAO {
 			
 			try {
 				if (student == null) {
-					throw new NullPointerException("Estudante com matricula " + matricula + " não encontrado");
+					System.out.println("Aluno com matricula " + matricula + " não encontrado");
 				}
 			}catch (NullPointerException e){
 				e.printStackTrace();
@@ -95,11 +95,39 @@ public class StudentDAO {
 	}
 	
 	public void deleteStudent(Long matricula) {
-        String sql = "DELETE FROM students WHERE matricula = ?";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setLong(1, matricula);
-            stmt.executeUpdate();
+		try {
+        	
+        	String checkSql = "SELECT COUNT(*) AS count FROM student_courses WHERE student_matricula = ?";
+            PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+            checkStmt.setLong(1, matricula);
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            int count = rs.getInt("count");
+        	
+            if (count == 0) {
+                String deleteStudentSql = "DELETE FROM students WHERE matricula = ?";
+                PreparedStatement deleteStmt = connection.prepareStatement(deleteStudentSql);
+                deleteStmt.setLong(1, matricula);
+                int rowsDeleted = deleteStmt.executeUpdate();
+                
+                if (rowsDeleted > 0) {
+                    System.out.println("Aluno deletado com sucesso.");
+                } else {
+                    System.out.println("Falha ao deletar Aluno. Nenhum registro foi deletado.");
+                }
+            } else {
+                String deleteStudentCoursesSql = "DELETE FROM student_courses WHERE student_matricula = ?";
+                PreparedStatement deleteStmt = connection.prepareStatement(deleteStudentCoursesSql);
+                
+                deleteStmt.setLong(1, matricula);
+                int rowsDeleted = deleteStmt.executeUpdate();
+                
+                if (rowsDeleted > 0) {
+                    deleteStudent(matricula);
+                } else {
+                    System.out.println("Falha ao deletar aluno. Nenhum registro foi deletado.");
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -143,7 +171,7 @@ public class StudentDAO {
 			}
 			try {
 				if (course == null) {
-					throw new NullPointerException("O aluno: '" + student.getName() + "', ainda não se matriculou em nenhum ");
+					System.out.println("O aluno: '" + student.getName() + "', ainda não se matriculou em nenhum ");
 				}
 			}catch (NullPointerException e){
 					e.printStackTrace();

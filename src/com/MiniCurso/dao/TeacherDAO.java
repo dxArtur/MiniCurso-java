@@ -58,7 +58,7 @@ public class TeacherDAO {
 			}
 			try {
 				if (teacher == null) {
-					throw new NullPointerException("Professor com matricula " + matricula + " não encontrado");
+					System.out.println("Professor com matricula " + matricula + " não encontrado");
 				}
 			}catch (NullPointerException e){
 				e.printStackTrace();
@@ -73,11 +73,39 @@ public class TeacherDAO {
 	
 
 	public void deleteTeacher(Long matricula) {
-        String sql = "DELETE FROM teachers WHERE matricula = ?";
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setLong(1, matricula);
-            stmt.executeUpdate();
+        	
+        	String checkSql = "SELECT COUNT(*) AS count FROM teacher_courses WHERE teacher_matricula = ?";
+            PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+            checkStmt.setLong(1, matricula);
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            int count = rs.getInt("count");
+        	
+            if (count == 0) {
+                String deleteTeacherSql = "DELETE FROM teachers WHERE matricula = ?";
+                PreparedStatement deleteStmt = connection.prepareStatement(deleteTeacherSql);
+                deleteStmt.setLong(1, matricula);
+                int rowsDeleted = deleteStmt.executeUpdate();
+                
+                if (rowsDeleted > 0) {
+                    System.out.println("Professor deletado com sucesso.");
+                } else {
+                    System.out.println("Falha ao deletar professor. Nenhum registro foi deletado.");
+                }
+            } else {
+                String deleteTeacherCoursesSql = "DELETE FROM teacher_courses WHERE teacher_matricula = ?";
+                PreparedStatement deleteStmt = connection.prepareStatement(deleteTeacherCoursesSql);
+                
+                deleteStmt.setLong(1, matricula);
+                int rowsDeleted = deleteStmt.executeUpdate();
+                
+                if (rowsDeleted > 0) {
+                    deleteTeacher(matricula);
+                } else {
+                    System.out.println("Falha ao deletar professor. Nenhum registro foi deletado.");
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

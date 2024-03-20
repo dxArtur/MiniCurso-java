@@ -1,10 +1,18 @@
 package com.MiniCurso;
 import com.MiniCurso.dao.*;
 import com.MiniCurso.model.*;
+import com.MiniCurso.util.*;
+
+import java.sql.Connection;
 
 public class Main {
 
 	public static void main(String[] args) {
+		
+		Connection connection = new ConnectionFactory().getConnection();
+		
+		SchemaSetup init = new SchemaSetup();
+		init.createTables(connection);
 		
 		CourseDAO courseDAO = new CourseDAO();
 		

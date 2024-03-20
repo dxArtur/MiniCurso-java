@@ -5,7 +5,7 @@ public class Teachers {
 	private String name;
 	private String email;
 	private String cpf;
-	//add courses list for students
+	
 	public Long getMatricula() {
 		return matricula;
 	}

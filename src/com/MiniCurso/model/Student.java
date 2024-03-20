@@ -6,8 +6,6 @@ public class Student {
 	private String name;
 	private String email;
 	private String cpf;
-	private Courses courses;
-	
 	
 	public Long getMatricula() {
 		return matricula;
@@ -32,13 +30,6 @@ public class Student {
 	}
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}
-	
-	public Courses getCourses() {
-		return courses;
-	}
-	public void setCourses(Courses courses) {
-		this.courses = courses;
 	}
 	
 }
